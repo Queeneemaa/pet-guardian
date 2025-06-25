@@ -16,7 +16,7 @@ export default function PetHotelPage() {
       {/* Header */}
       <header className="bg-orange-500 text-white flex justify-between items-center px-8 py-4 shadow-md">
         <div className="flex items-center gap-3">
-          <Image src="/logo.svg" alt="logo" width={32} height={32} className="rounded-full" />
+          <Image src="/image/logopaw.png" alt="logo" width={32} height={32} className="rounded-full" />
           <span className="text-xl font-bold">PetGuardian</span>
         </div>
         <nav className="flex gap-8 text-sm font-medium">

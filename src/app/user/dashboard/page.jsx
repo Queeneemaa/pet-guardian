@@ -26,7 +26,7 @@ export default function DashboardPage() {
       {/* Header */}
       <header className="bg-orange-500 text-white flex justify-between items-center px-8 py-4 shadow-md">
         <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="logo" className="w-8 h-8" />
+          <img src="/image/logopaw.png" alt="logo" className="w-8 h-8" />
           <span className="text-xl font-bold">PetGuardian</span>
         </div>
         <nav className="flex gap-8 text-sm font-medium">
@@ -50,30 +50,48 @@ export default function DashboardPage() {
       {/* Content Berdasarkan Role */}
       <section className="bg-white m-6 rounded-2xl shadow-sm px-10 py-6">
         {role === 'user' && (
-          <>
-            <h3 className="text-lg font-bold mb-6 text-gray-800">Services</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Link href="/user/services/grooming">
-                <div className="bg-lime-100 p-6 rounded-xl flex flex-col items-center shadow hover:scale-105 transition cursor-pointer">
-                  <Image src="/image/anjing_poy-removebg-preview.png" alt="Grooming" width={100} height={100} />
-                  <p className="mt-4 font-semibold text-gray-700">Grooming</p>
-                </div>
-              </Link>
-              <Link href="/user/services/vaccine">
-                <div className="bg-sky-100 p-6 rounded-xl flex flex-col items-center shadow hover:scale-105 transition cursor-pointer">
-                  <Image src="/image/anjing_vaksin-removebg-preview.png" alt="Vaccine" width={100} height={100} />
-                  <p className="mt-4 font-semibold text-gray-700">Vaccine</p>
-                </div>
-              </Link>
-              <Link href="/user/services/pet-hotel">
-                <div className="bg-purple-100 p-6 rounded-xl flex flex-col items-center shadow hover:scale-105 transition cursor-pointer">
-                  <Image src="/image/kucing-removebg-preview.png" alt="pet-hotel" width={100} height={100} />
-                  <p className="mt-4 font-semibold text-gray-700">Pet Hotel</p>
-                </div>
-              </Link>
-            </div>
-          </>
-        )}
+  <>
+    <h3 className="text-lg font-bold mb-6 text-gray-800">Services</h3>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <Link href="/user/services/grooming">
+        <div className="bg-lime-100 min-h-[220px] p-6 rounded-xl flex flex-col items-center shadow hover:scale-105 transition cursor-pointer">
+          <Image
+            src="/image/anjing_poy-removebg-preview.png"
+            alt="Grooming"
+            width={100}
+            height={100}
+          />
+          <p className="mt-4 font-semibold text-gray-700">Grooming</p>
+        </div>
+      </Link>
+
+      <Link href="/user/services/vaccine">
+        <div className="bg-sky-100 min-h-[220px] p-6 rounded-xl flex flex-col items-center shadow hover:scale-105 transition cursor-pointer">
+          <Image
+            src="/image/anjing_vaksin-removebg-preview.png"
+            alt="Vaccine"
+            width={100}
+            height={100}
+          />
+          <p className="mt-4 font-semibold text-gray-700">Vaccine</p>
+        </div>
+      </Link>
+
+      <Link href="/user/services/pet-hotel">
+        <div className="bg-purple-100 min-h-[220px] p-6 rounded-xl flex flex-col items-center shadow hover:scale-105 transition cursor-pointer">
+          <Image
+            src="/image/kucing-removebg-preview.png"
+            alt="Pet Hotel"
+            width={100}
+            height={100}
+          />
+          <p className="mt-4 font-semibold text-gray-700">Pet Hotel</p>
+        </div>
+      </Link>
+    </div>
+  </>
+)}
+
 
         {role === 'staff' && (
           <div>

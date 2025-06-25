@@ -38,7 +38,7 @@ export default function BookingPage() {
       {/* Header */}
       <header className="bg-orange-500 text-white flex justify-between items-center px-8 py-4">
         <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="logo" className="w-8 h-8" />
+          <img src="/image/logopaw.png" alt="logo" className="w-8 h-8" />
           <span className="text-xl font-bold">PetGuardian</span>
         </div>
         <nav className="flex gap-6 text-sm">

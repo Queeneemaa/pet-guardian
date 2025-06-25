@@ -39,9 +39,9 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen font-sans">
       <div className="w-1/2 bg-orange-400 text-white flex flex-col justify-center items-center px-10">
-        <div className="bg-white p-6 rounded-full mb-6">
-          <img src="/image/Splash_Screen-removebg-preview.png" alt="logo" className="w-24 h-24" />
-        </div>
+        <div className="mb-6">
+  <img src="/image/logopaw.jpg" alt="logo" className="w-24 h-24" />
+</div>
         <h1 className="text-3xl font-bold">PetGuardian</h1>
         <p className="text-sm mt-2">"Your Pets' Lifelong Protector"</p>
       </div>
