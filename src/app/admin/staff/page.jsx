@@ -1,34 +1,29 @@
 'use client';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function AdminDashboard() {
-  const router = useRouter();
-
   const [petugas, setPetugas] = useState([]);
   const [layanan, setLayanan] = useState([]);
 
   useEffect(() => {
-    const storedPetugas = JSON.parse(localStorage.getItem('staffs') || '[]');
-    const storedLayanan = JSON.parse(localStorage.getItem('services') || '[]');
-    setPetugas(storedPetugas);
-    setLayanan(storedLayanan);
+    const fetchData = async () => {
+      try {
+        const resStaff = await fetch('/api/staff');
+        const resService = await fetch('/api/service');
+
+        const dataStaff = await resStaff.json();
+        const dataService = await resService.json();
+
+        if (resStaff.ok) setPetugas(dataStaff);
+        if (resService.ok) setLayanan(dataService);
+      } catch (error) {
+        console.error('Gagal fetch:', error);
+      }
+    };
+
+    fetchData();
   }, []);
-
-  const handleDeleteStaff = (index) => {
-    const updated = [...petugas];
-    updated.splice(index, 1);
-    setPetugas(updated);
-    localStorage.setItem('staffs', JSON.stringify(updated));
-  };
-
-  const handleDeleteService = (index) => {
-    const updated = [...layanan];
-    updated.splice(index, 1);
-    setLayanan(updated);
-    localStorage.setItem('services', JSON.stringify(updated));
-  };
 
   return (
     <div className="min-h-screen bg-[#fffaf5] font-sans">
@@ -56,24 +51,22 @@ export default function AdminDashboard() {
         <div className="border-2 border-orange-300 rounded-xl p-6 text-orange-500">
           <h3 className="text-center font-bold text-lg mb-4">Daftar Petugas</h3>
           <ol className="list-decimal list-inside mb-6 space-y-2">
-            {petugas.map((p, i) => (
-              <li key={i} className="flex justify-between items-center">
-                <span>{p.name}{p.role && `, ${p.role}`}</span>
-                <button
-                  onClick={() => handleDeleteStaff(i)}
-                  className="text-sm text-red-500 hover:underline"
-                >
-                  Hapus
-                </button>
-              </li>
-            ))}
+            {petugas.length === 0 ? (
+              <p className="text-sm text-gray-500">Belum ada petugas.</p>
+            ) : (
+              petugas.map((p, i) => (
+                <li key={i} className="flex justify-between items-center">
+                  <span>{p.email} {p.role && `, ${p.role}`}</span>
+                </li>
+              ))
+            )}
           </ol>
           <div className="text-center">
             <Link
-              href="/dashboard/admin/staff/add"
+              href="/admin/add-staff"
               className="bg-orange-400 hover:bg-orange-500 text-white py-2 px-4 rounded-md text-sm inline-flex items-center gap-2"
             >
-              ➕ Tambah Petugas
+              Tambah Petugas
             </Link>
           </div>
         </div>
@@ -82,26 +75,22 @@ export default function AdminDashboard() {
         <div className="border-2 border-orange-300 rounded-xl p-6 text-orange-500">
           <h3 className="text-center font-bold text-lg mb-4">Daftar Layanan</h3>
           <ol className="list-decimal list-inside mb-6 space-y-4">
-            {layanan.map((service, i) => (
-              <li key={i} className="flex justify-between items-start gap-2">
-                <div className="text-sm space-y-1">
-                  <p><strong>Nama Layanan:</strong> {service.nama}</p>
+            {layanan.length === 0 ? (
+              <p className="text-sm text-gray-500">Belum ada layanan.</p>
+            ) : (
+              layanan.map((service, i) => (
+                <li key={i} className="text-sm space-y-1">
+                  <p><strong>Nama:</strong> {service.nama}</p>
                   <p><strong>Deskripsi:</strong> {service.deskripsi}</p>
                   {service.durasi && <p><strong>Durasi:</strong> {service.durasi}</p>}
                   {service.role && <p><strong>Role:</strong> {service.role}</p>}
-                </div>
-                <button
-                  onClick={() => handleDeleteService(i)}
-                  className="text-sm text-red-500 hover:underline"
-                >
-                  Hapus
-                </button>
-              </li>
-            ))}
+                </li>
+              ))
+            )}
           </ol>
           <div className="text-center">
             <Link
-              href="/dashboard/admin/services/add"
+              href="/admin/add-service"
               className="bg-orange-400 hover:bg-orange-500 text-white py-2 px-4 rounded-md text-sm inline-flex items-center gap-2"
             >
               ➕ Tambah Layanan

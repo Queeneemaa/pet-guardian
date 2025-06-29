@@ -4,46 +4,36 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 export default function StaffDashboardPage() {
-    const router = useRouter();
+  const router = useRouter();
+  const [services, setServices] = useState([]);
   const [bookings, setBookings] = useState([]);
-  const [selectedService, setSelectedService] = useState(null); // Tidak langsung pilih apa-apa
-  // onClick={()=> router.push(`/staff/services/${service.name.toLowerCase().replace(' ', '-')}`);
+  const [selectedService, setSelectedService] = useState(null);
 
   useEffect(() => {
-    const data = localStorage.getItem('my-booking');
-    if (data) {
-      try {
-        const parsed = JSON.parse(data);
-        setBookings(Array.isArray(parsed) ? parsed : [parsed]);
-      } catch (err) {
-        console.error('Gagal parsing booking:', err);
-      }
-    }
+    const fetchServices = async () => {
+      const { data, error } = await supabase.from('services').select('*');
+      if (error) console.error('Error fetching services:', error.message);
+      else setServices(data);
+    };
+    fetchServices();
   }, []);
 
-  const services = [
-    {
-      name: 'Grooming',
-      image: '/image/anjing_poy-removebg-preview.png',
-      color: 'bg-lime-100',
-    },
-    {
-      name: 'Vaccine',
-      image: '/image/anjing_vaksin-removebg-preview.png',
-      color: 'bg-sky-100',
-    },
-    {
-      name: 'Pet Hotel',
-      image: '/image/kucing-removebg-preview.png',
-      color: 'bg-purple-100',
-    },
-  ];
+  const handleServiceClick = async (type) => {
+    setSelectedService(type);
 
-  const filteredBookings = selectedService
-    ? bookings.filter((b) => b.service.toLowerCase() === selectedService.toLowerCase())
-    : [];
+    const today = new Date().toISOString().split('T')[0];
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('service_type', type)
+      .eq('schedule', today);
+
+    if (error) console.error('Error fetching bookings:', error.message);
+    else setBookings(data);
+  };
 
   return (
     <div className="min-h-screen bg-[#fffaf5] font-sans">
@@ -61,35 +51,35 @@ export default function StaffDashboardPage() {
       {/* Greeting */}
       <section className="px-10 py-6">
         <h2 className="text-xl text-orange-500 font-semibold">Hi, Petugas</h2>
-        <p className="text-sm text-gray-500">Klik salah satu layanan untuk melihat booking-nya</p>
+        <p className="text-sm text-gray-500">Klik salah satu layanan untuk melihat booking hari ini</p>
       </section>
 
-      {/* Kartu Layanan */}
+      {/* Layanan */}
       <section className="bg-white mx-6 rounded-2xl shadow-sm px-10 py-6">
         <h3 className="text-lg font-bold mb-6 text-gray-800">Layanan</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {services.map((service) => (
             <div
-              key={service.name}
-              onClick={() =>router.push(`/staff/services/${service.name.toLowerCase().replace(' ', '-')}`)} 
-              className={`${service.color} p-6 rounded-xl flex flex-col items-center shadow hover:scale-105 transition cursor-pointer`}
+              key={service.id}
+              onClick={() => handleServiceClick(service.type)}
+              className="bg-orange-50 p-6 rounded-xl flex flex-col items-center shadow hover:scale-105 transition cursor-pointer"
             >
-              <Image src={service.image} alt={service.name} width={100} height={100} />
+              <Image src={service.image_url} alt={service.name} width={100} height={100} />
               <p className="mt-4 font-semibold text-gray-700">{service.name}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Booking Section muncul setelah klik layanan */}
+      {/* Booking List */}
       {selectedService && (
         <section className="bg-white mx-6 mt-4 rounded-2xl shadow-sm px-10 py-6">
           <h3 className="text-lg font-bold text-gray-800 mb-4">
-            Booking Layanan: {selectedService}
+            Booking untuk layanan: {selectedService}
           </h3>
 
-          {filteredBookings.length === 0 ? (
-            <p className="text-sm text-gray-500">Belum ada booking untuk layanan ini.</p>
+          {bookings.length === 0 ? (
+            <p className="text-sm text-gray-500">Belum ada booking hari ini.</p>
           ) : (
             <table className="w-full text-sm text-gray-700 border border-orange-300 rounded-md overflow-hidden">
               <thead className="bg-orange-100 text-left">
@@ -101,12 +91,12 @@ export default function StaffDashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {filteredBookings.map((b, idx) => (
+                {bookings.map((b, idx) => (
                   <tr key={idx} className="border-t">
-                    <td className="py-2 px-3">{b.pet}</td>
-                    <td className="py-2 px-3">{b.date}</td>
+                    <td className="py-2 px-3">{b.animal_name}</td>
+                    <td className="py-2 px-3">{b.schedule}</td>
                     <td className="py-2 px-3">{b.time}</td>
-                    <td className="py-2 px-3">{b.note}</td>
+                    <td className="py-2 px-3">{b.note || '-'}</td>
                   </tr>
                 ))}
               </tbody>

@@ -7,14 +7,33 @@ export default function AddStaffPage() {
   const [form, setForm] = useState({
     name: '',
     email: '',
-    role: '',
+    password: '',
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const existing = JSON.parse(localStorage.getItem('staffs') || '[]');
-    const updated = [...existing, form];
-    localStorage.setItem('staffs', JSON.stringify(updated));
+    setLoading(true);
+
+    const res = await fetch('/api/staff', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: form.email,
+        password: form.password,
+        name: form.name,
+      }),
+    });
+
+    const result = await res.json();
+    setLoading(false);
+
+    if (!res.ok) {
+      alert('Gagal menambahkan petugas: ' + result.error);
+      return;
+    }
+
+    alert('Petugas berhasil ditambahkan!');
     router.replace('/admin/dashboard');
   };
 
@@ -30,7 +49,7 @@ export default function AddStaffPage() {
             <input
               type="text"
               placeholder="Nama Petugas"
-              className="w-full border border-orange-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-orange-300"
+              className="w-full border border-orange-300 px-4 py-2 rounded"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
@@ -41,28 +60,30 @@ export default function AddStaffPage() {
             <input
               type="email"
               placeholder="Email Petugas"
-              className="w-full border border-orange-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-orange-300"
+              className="w-full border border-orange-300 px-4 py-2 rounded"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-orange-500 mb-1">Role</label>
+            <label className="block text-sm text-orange-500 mb-1">Password</label>
             <input
-              type="text"
-              placeholder="Role (mis. Dokter, Groomer, etc)"
-              className="w-full border border-orange-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-orange-300"
-              value={form.role}
-              onChange={(e) => setForm({ ...form, role: e.target.value })}
+              type="password"
+              placeholder="Password"
+              className="w-full border border-orange-300 px-4 py-2 rounded"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              required
             />
           </div>
           <div className="text-center">
             <button
               type="submit"
-              className="bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600 text-sm inline-flex items-center gap-2"
+              className="bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600 text-sm"
+              disabled={loading}
             >
-              Tambah Petugas
+              {loading ? 'Menyimpan...' : 'Tambah Petugas'}
             </button>
           </div>
         </form>

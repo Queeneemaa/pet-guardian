@@ -9,50 +9,26 @@ export default function AdminDashboard() {
   const [petugas, setPetugas] = useState([]);
   const [layanan, setLayanan] = useState([]);
 
-  // Ambil dan update data dari localStorage
   useEffect(() => {
-    const fetchData = () => {
-      const storedPetugas = JSON.parse(localStorage.getItem('staffs') || '[]');
-      const storedLayanan = JSON.parse(localStorage.getItem('services') || '[]');
-      setPetugas(storedPetugas);
-      setLayanan(storedLayanan);
+    const fetchData = async () => {
+      try {
+        const [staffRes, serviceRes] = await Promise.all([
+          fetch('/api/staff'),
+          fetch('/api/service'),
+        ]);
+
+        const staffData = await staffRes.json();
+        const serviceData = await serviceRes.json();
+
+        if (staffRes.ok) setPetugas(staffData);
+        if (serviceRes.ok) setLayanan(serviceData);
+      } catch (err) {
+        console.error('Gagal fetch data:', err);
+      }
     };
 
     fetchData();
-
-    // Listener supaya bisa refresh otomatis
-    const handleServiceUpdate = () => {
-      const updatedServices = JSON.parse(localStorage.getItem('services') || '[]');
-      setLayanan(updatedServices);
-    };
-
-    const handleStaffUpdate = () => {
-      const updatedStaffs = JSON.parse(localStorage.getItem('staffs') || '[]');
-      setPetugas(updatedStaffs);
-    };
-
-    window.addEventListener('service-updated', handleServiceUpdate);
-    window.addEventListener('staff-updated', handleStaffUpdate);
-
-    return () => {
-      window.removeEventListener('service-updated', handleServiceUpdate);
-      window.removeEventListener('staff-updated', handleStaffUpdate);
-    };
   }, []);
-
-  const handleDeleteStaff = (index) => {
-    const updated = [...petugas];
-    updated.splice(index, 1);
-    setPetugas(updated);
-    localStorage.setItem('staffs', JSON.stringify(updated));
-  };
-
-  const handleDeleteService = (index) => {
-    const updated = [...layanan];
-    updated.splice(index, 1);
-    setLayanan(updated);
-    localStorage.setItem('services', JSON.stringify(updated));
-  };
 
   return (
     <div className="min-h-screen bg-[#fffaf5] font-sans">
@@ -63,9 +39,7 @@ export default function AdminDashboard() {
           <span className="text-xl font-bold">PetGuardian</span>
         </div>
         <nav>
-          <Link href="/login" className="hover:underline">
-            Logout
-          </Link>
+          <Link href="/login" className="hover:underline">Logout</Link>
         </nav>
       </header>
 
@@ -81,14 +55,9 @@ export default function AdminDashboard() {
           <h3 className="text-center font-bold text-lg mb-4">Daftar Petugas</h3>
           <ol className="list-decimal list-inside mb-6 space-y-2">
             {petugas.map((p, i) => (
-              <li key={i} className="flex justify-between items-center">
-                <span>{p.name}, {p.role}</span>
-                <button
-                  onClick={() => handleDeleteStaff(i)}
-                  className="text-sm text-red-500 hover:underline"
-                >
-                  Hapus
-                </button>
+              <li key={p.id || i} className="flex justify-between items-center">
+                <span>{p.name || p.email}, {p.role}</span>
+                {/* Tombol hapus bisa ditambahkan nanti jika ada DELETE API */}
               </li>
             ))}
           </ol>
@@ -97,7 +66,7 @@ export default function AdminDashboard() {
               href="/admin/add-staff"
               className="bg-orange-400 hover:bg-orange-500 text-white py-2 px-4 rounded-md text-sm inline-flex items-center gap-2"
             >
-              ➕ Tambah Petugas
+              Tambah Petugas
             </Link>
           </div>
         </div>
@@ -107,18 +76,13 @@ export default function AdminDashboard() {
           <h3 className="text-center font-bold text-lg mb-4">Daftar Layanan</h3>
           <ol className="list-decimal list-inside mb-6 space-y-2">
             {layanan.map((l, i) => (
-              <li key={i} className="flex justify-between items-start">
+              <li key={l.id || i} className="flex justify-between items-start">
                 <div>
                   <div>{l.nama}</div>
                   <div className="text-sm">{l.durasi}</div>
                   {l.role && <div className="text-sm">Role: {l.role}</div>}
                 </div>
-                <button
-                  onClick={() => handleDeleteService(i)}
-                  className="text-sm text-red-500 hover:underline"
-                >
-                  Hapus
-                </button>
+                {/* Tombol hapus bisa ditambahkan jika sudah punya endpoint DELETE */}
               </li>
             ))}
           </ol>
@@ -127,7 +91,7 @@ export default function AdminDashboard() {
               href="/admin/add-services"
               className="bg-orange-400 hover:bg-orange-500 text-white py-2 px-4 rounded-md text-sm inline-flex items-center gap-2"
             >
-              ➕ Tambah Layanan
+              Tambah Layanan
             </Link>
           </div>
         </div>

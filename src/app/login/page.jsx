@@ -10,42 +10,55 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
+      setLoading(false);
 
-    if (!res.ok) {
-      setError(data.message || 'Login gagal');
-    } else {
+      if (!res.ok) {
+        setError(data.message || 'Login gagal');
+        return;
+      }
+
       const role = data.role;
-
-      // Simpan role dan data ke localStorage (atau cookie jika perlu)
       localStorage.setItem('role', role);
 
-      // Redirect berdasarkan role
-      if (role === 'user') router.push('/user/dashboard');
+      if (role === 'owner') router.push('/owner/dashboard');
       else if (role === 'staff') router.push('/staff/dashboard');
       else if (role === 'admin') router.push('/admin/dashboard');
+      else router.push('/'); // fallback
+    } catch (err) {
+      setLoading(false);
+      setError('Terjadi kesalahan jaringan.');
     }
   };
 
   return (
     <div className="flex min-h-screen font-sans">
+      {/* Kiri: Gambar dan Logo */}
       <div className="w-1/2 bg-orange-400 text-white flex flex-col justify-center items-center px-10">
         <div className="mb-6">
-  <img src="/image/logopaw.jpg" alt="logo" className="w-24 h-24" />
-</div>
+          <img src="/image/logopaw.jpg" alt="logo" className="w-24 h-24" />
+        </div>
         <h1 className="text-3xl font-bold">PetGuardian</h1>
         <p className="text-sm mt-2">"Your Pets' Lifelong Protector"</p>
       </div>
 
+      {/* Kanan: Form Login */}
       <div className="w-1/2 flex flex-col justify-center px-16">
         <h2 className="text-2xl font-bold mb-6 text-orange-500">Login</h2>
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
@@ -56,6 +69,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-orange-300 px-4 py-2 rounded-md focus:outline-none"
+              required
             />
           </div>
 
@@ -67,6 +81,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full border border-orange-300 px-4 py-2 rounded-md pr-10 focus:outline-none"
+                required
               />
               <span
                 onClick={() => setVisible(!visible)}
@@ -79,8 +94,12 @@ export default function LoginPage() {
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          <button type="submit" className="bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition">
-            Masuk
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition"
+          >
+            {loading ? 'Memproses...' : 'Masuk'}
           </button>
         </form>
 
