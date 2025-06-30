@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import supabase from '@/lib/supabaseBrowserClient';
 
 export default function MyBookingPage() {
   const [booking, setBooking] = useState([]);
@@ -12,28 +12,39 @@ export default function MyBookingPage() {
     const fetchData = async () => {
       const {
         data: { session },
+        error: sessionError,
       } = await supabase.auth.getSession();
 
       const userId = session?.user?.id;
-
-      if (!userId) return;
+      if (sessionError || !userId) return;
 
       // Ambil nama user
-      const { data: userData } = await supabase
-        .from('users')
-        .select('name')
-        .eq('id', userId)
-        .single();
-      setUserName(userData?.name || '');
+      const { data: bookingsRaw, error: bookingError } = await supabase
+  .from('bookings')
+  .select('*')
+  .eq('user_id', userId)
+  .order('date', { ascending: true });
 
-      // Ambil data booking user
-      const { data: bookings } = await supabase
-        .from('bookings')
-        .select('*, services(nama)')
-        .eq('user_id', userId)
-        .order('date', { ascending: true });
+if (bookingError) {
+  console.error('Gagal ambil data booking:', bookingError.message);
+  setBooking([]);
+} else {
+  // Ambil semua id layanan unik
+  const serviceIds = [...new Set(bookingsRaw.map(b => b.service_id))];
 
-      setBooking(bookings);
+  const { data: servicesData } = await supabase
+    .from('services')
+    .select('id, nama')
+    .in('id', serviceIds);
+
+  const bookingsWithService = bookingsRaw.map(b => ({
+    ...b,
+    services: servicesData?.find(s => s.id === b.service_id),
+  }));
+
+  setBooking(bookingsWithService);
+}
+
     };
 
     fetchData();
@@ -42,29 +53,31 @@ export default function MyBookingPage() {
   return (
     <div className="min-h-screen bg-[#fffaf5] font-sans">
       {/* Header */}
-      <header className="bg-orange-500 text-white flex justify-between items-center px-8 py-4">
+<header style={{ backgroundColor: '#F59245' }} className="text-white flex justify-between items-center px-8 py-4">
         <div className="flex items-center gap-3">
           <img src="/image/logopaw.png" alt="logo" className="w-8 h-8" />
           <span className="text-xl font-bold">PetGuardian</span>
         </div>
         <nav className="flex gap-6 text-sm">
-          <Link href="/user/booking">Booking</Link>
-          <Link href="/user/my-booking">My Booking</Link>
+          <Link href="/owner/booking">Pemesanan</Link>
+          <Link href="/owner/my-booking">Pemesanan Saya</Link>
           <Link href="/login">Logout</Link>
         </nav>
       </header>
 
       {/* Greeting */}
       <section className="px-10 py-6">
-        <h2 className="text-xl text-orange-500 font-semibold">Hi, {userName || 'User'}</h2>
+        <h2 className="text-xl text-orange-500 font-semibold">
+          Hi, {userName || 'User'}
+        </h2>
         <p className="text-sm text-gray-500">Take care of your pet!</p>
       </section>
 
       {/* Booking List */}
       <section className="bg-white mx-6 rounded-2xl shadow-sm px-10 py-6">
-        <h3 className="text-lg font-bold mb-6 text-gray-800">My Booking</h3>
+        <h3 className="text-lg font-bold mb-6 text-gray-800">Pesanan Saya</h3>
 
-        {booking?.length === 0 ? (
+        {Array.isArray(booking) && booking.length === 0 ? (
           <p className="text-gray-500">Belum ada booking.</p>
         ) : (
           <div className="space-y-4 max-w-md">

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseBrowserClient'
+import  supabase  from '@/lib/supabaseBrowserClient'
 
 // GET: Ambil semua petugas
 export async function GET() {

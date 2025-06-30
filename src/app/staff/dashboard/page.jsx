@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import  supabase  from '@/lib/supabaseBrowserClient';
 
 export default function StaffDashboardPage() {
   const router = useRouter();
@@ -38,7 +38,7 @@ export default function StaffDashboardPage() {
   return (
     <div className="min-h-screen bg-[#fffaf5] font-sans">
       {/* Header */}
-      <header className="bg-orange-500 text-white flex justify-between items-center px-8 py-4">
+      <header style={{ backgroundColor: '#F59245' }} className="text-white flex justify-between items-center px-8 py-4">
         <div className="flex items-center gap-3">
           <img src="/image/logopaw.png" alt="logo" className="w-8 h-8" />
           <span className="text-xl font-bold">PetGuardian Staff</span>

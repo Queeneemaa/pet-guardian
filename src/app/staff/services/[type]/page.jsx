@@ -8,11 +8,16 @@ import dayjs from 'dayjs'
 export default function StaffServicePage() {
   const { type } = useParams()
   const [bookings, setBookings] = useState([])
+  const [today, setToday] = useState(null)
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      const today = dayjs().format('YYYY-MM-DD')
+    setToday(dayjs().format('YYYY-MM-DD'))
+  }, [])
 
+  useEffect(() => {
+    if (!today) return
+
+    const fetchBookings = async () => {
       const { data, error } = await supabase
         .from('bookings')
         .select('*, users(name)')
@@ -29,7 +34,7 @@ export default function StaffServicePage() {
     }
 
     fetchBookings()
-  }, [type])
+  }, [type, today])
 
   const handleDone = async (bookingId) => {
     const { error } = await supabase
@@ -45,6 +50,8 @@ export default function StaffServicePage() {
       )
     }
   }
+
+  if (!today) return <p>Loading...</p>
 
   return (
     <main className="p-8">

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import  supabase  from '@/lib/supabaseBrowserClient';
 
 export default function UserDashboard() {
   const router = useRouter();
@@ -49,14 +49,14 @@ export default function UserDashboard() {
   return (
     <div className="min-h-screen bg-[#fffaf5] font-sans">
       {/* Header */}
-      <header className="bg-[#C87E4F] text-white flex justify-between items-center px-8 py-4 shadow-md">
+      <header style={{ backgroundColor: '#F59245' }} className="text-white flex justify-between items-center px-8 py-4">
         <div className="flex items-center gap-3">
           <img src="/image/logopaw.png" alt="logo" className="w-8 h-8" />
           <span className="text-xl font-bold">PetGuardian</span>
         </div>
         <nav className="flex gap-8 text-sm font-medium">
-          <Link href="/user/booking">Booking</Link>
-          <Link href="/user/my-booking">My Booking</Link>
+          <Link href="/owner/booking">Pemesanan</Link>
+          <Link href="/owner/my-booking">Pemesanan Saya</Link>
           <Link href="/login">Logout</Link>
         </nav>
       </header>
@@ -68,9 +68,9 @@ export default function UserDashboard() {
         <p className="text-sm text-gray-600">Take care of your pet !</p>
       </section>
 
-      {/* Services */}
+      {/* Layanan */}
       <section className="bg-white mx-6 mt-4 rounded-2xl shadow px-10 py-6">
-        <h3 className="text-xl font-bold text-[#5A3B1E] mb-6">Services</h3>
+        <h3 className="text-xl font-bold text-[#5A3B1E] mb-6">Layanan</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {services.map((service) => (
             <Link key={service.id} href={`/user/services/${service.type}`}>

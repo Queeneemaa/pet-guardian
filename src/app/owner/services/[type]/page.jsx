@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import  supabase  from '@/lib/supabaseBrowserClient';
 
 export default function ServiceDetailPage() {
   const { type } = useParams();

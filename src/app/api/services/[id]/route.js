@@ -1,8 +1,9 @@
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { createSupabaseServerClient } from '@/lib/supabaseServerClient';
 import { NextResponse } from 'next/server';
 
-// Ambil layanan berdasarkan ID
+
 export async function GET(_, { params }) {
+  const supabase = createSupabaseServerClient();
   const { id } = params;
 
   const { data, error } = await supabase
@@ -18,8 +19,9 @@ export async function GET(_, { params }) {
   return NextResponse.json(data, { status: 200 });
 }
 
-// Update layanan berdasarkan ID
+
 export async function PATCH(req, { params }) {
+  const supabase = createSupabaseServerClient();
   const { id } = params;
   const { nama, deskripsi, durasi, role, image_url } = await req.json();
 
@@ -32,9 +34,9 @@ export async function PATCH(req, { params }) {
   const { error } = await supabase
     .from('services')
     .update({
-      nama,
-      deskripsi,
-      durasi,
+      name: nama,
+      description: deskripsi,
+      duration: durasi,
       role,
       image_url,
       type,
@@ -48,8 +50,9 @@ export async function PATCH(req, { params }) {
   return NextResponse.json({ message: 'Layanan berhasil diupdate' }, { status: 200 });
 }
 
-// Hapus layanan berdasarkan ID
+
 export async function DELETE(_, { params }) {
+  const supabase = createSupabaseServerClient();
   const { id } = params;
 
   const { error } = await supabase.from('services').delete().eq('id', id);

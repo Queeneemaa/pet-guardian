@@ -16,8 +16,8 @@ export async function POST(req) {
     password,
   });
 
-  console.log('Auth Data:', authData); // ➕ Log 1
-  console.log('Auth Error:', error);   // ➕ Log 2
+  console.log('Auth Data:', authData); 
+  console.log('Auth Error:', error);   
 
   if (error || !authData?.user) {
     return NextResponse.json({ message: 'Email atau password salah.' }, { status: 401 });
@@ -32,9 +32,9 @@ export async function POST(req) {
     .eq('id', user.id)
     .single();
 
-  console.log('User ID:', user.id);         // ➕ Log 3
-  console.log('Profile:', profile);         // ➕ Log 4
-  console.log('Profile Error:', userError); // ➕ Log 5
+  console.log('User ID:', user.id);         
+  console.log('Profile:', profile);         
+  console.log('Profile Error:', userError); 
 
   if (userError || !profile) {
     return NextResponse.json({ message: 'Gagal mengambil data pengguna.' }, { status: 401 });

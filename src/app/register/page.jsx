@@ -111,7 +111,7 @@ export default function RegisterPage() {
                 onClick={() => setPasswordVisible(!passwordVisible)}
                 className="absolute inset-y-0 right-3 flex items-center text-orange-400 cursor-pointer"
               >
-                <EyeOff className="w-5 h-5" />
+              
               </span>
             </div>
           </div>
