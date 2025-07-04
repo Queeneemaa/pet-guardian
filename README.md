@@ -1,4 +1,4 @@
-# 🐾 Pet Guardian: Web Platform for Pet Care Services
+# Pet Guardian: Web Platform for Pet Care Services
 
 **Pet Guardian** adalah platform berbasis web yang membantu pemilik hewan memesan layanan grooming, vaksin, dan penitipan. Aplikasi juga mendukung pengelolaan data layanan dan penugasan staff oleh admin.
 
@@ -6,7 +6,7 @@
 
 ---
 
-## 🎯 Goals
+## Goals
 
 - Mempermudah booking layanan hewan peliharaan
 - Memberikan kontrol ke admin untuk mengelola layanan & staff
@@ -14,7 +14,7 @@
 
 ---
 
-## 🛠️ Fitur Utama
+## Fitur Utama
 
 - Manajemen profil hewan
 - Pemesanan layanan tanpa pembayaran
@@ -23,7 +23,7 @@
 
 ---
 
-## 🧱 Arsitektur Sistem
+## Arsitektur Sistem
 
 Sistem dibangun dengan pendekatan modular berbasis **Next.js App Router** dan Supabase. Semua API ditangani via `API Routes` dan database menggunakan **Supabase client**.
 
@@ -35,7 +35,7 @@ Sistem dibangun dengan pendekatan modular berbasis **Next.js App Router** dan Su
 
 ---
 
-## 🧅 Clean Architecture View
+## Clean Architecture View
 
 - **Entities:** User, Booking, Service
 - **Use Cases:** Pemesanan, Penugasan, Update status
@@ -44,7 +44,7 @@ Sistem dibangun dengan pendekatan modular berbasis **Next.js App Router** dan Su
 
 ---
 
-## 📁 Struktur Folder
+## Struktur Folder
 
 ```bash
 /app            # Halaman per-role
@@ -53,8 +53,44 @@ Sistem dibangun dengan pendekatan modular berbasis **Next.js App Router** dan Su
 /lib            # Supabase client & helper
 /styles         # Tailwind global
 middleware.js   # Auth & Role-based protection
+```
 
+## Stakeholders
 
+| Role  | Ekspektasi                           |
+| ----- | ------------------------------------ |
+| Owner | Booking mudah & status layanan jelas |
+| Admin | Kelola layanan dan staff             |
+| Staff | Lihat tugas & update status layanan  |
 
+---
 
+## Quality Attributes
 
+| Attribute       | Deskripsi                      |
+| --------------- | ------------------------------ |
+| Usability       | UI sederhana, mobile-friendly  |
+| Security        | Role-based auth via middleware |
+| Maintainability | Struktur modular               |
+| Performance     | Supabase dengan query indexed  |
+
+---
+
+## Risiko & Utang Teknis
+
+| Risiko                   | Dampak | Mitigasi                            |
+| ------------------------ | ------ | ----------------------------------- |
+| Supabase dependency      | Sedang | Siapkan fallback                    |
+| Belum ada notifikasi     | Sedang | Tambah WebSocket/Pusher             |
+| Middleware auth terbatas | Rendah | Refactor ke HOC + middleware server |
+
+---
+
+## Glosarium
+
+- Booking: Pemesanan layanan
+- Supabase: Backend-as-a-service
+- Middleware: Proteksi route berdasarkan role
+- Staff: Petugas layanan hewan
+
+---
