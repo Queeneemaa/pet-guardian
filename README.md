@@ -1,4 +1,4 @@
-# 🐾 Pet Guardian – Web Platform for Pet Care Services
+# 🐾 Pet Guardian: Web Platform for Pet Care Services
 
 **Pet Guardian** adalah platform berbasis web yang membantu pemilik hewan memesan layanan grooming, vaksin, dan penitipan. Aplikasi juga mendukung pengelolaan data layanan dan penugasan staff oleh admin.
 
@@ -36,4 +36,25 @@ Sistem dibangun dengan pendekatan modular berbasis **Next.js App Router** dan Su
 ---
 
 ## 🧅 Clean Architecture View
+
+- **Entities:** User, Booking, Service
+- **Use Cases:** Pemesanan, Penugasan, Update status
+- **Adapters:** API Routes dan Komponen React
+- **Drivers:** Next.js, Supabase
+
+---
+
+## 📁 Struktur Folder
+
+```bash
+/app            # Halaman per-role
+/app/api        # API modular (booking, service, staff)
+/components     # UI Reusable (Form, Card)
+/lib            # Supabase client & helper
+/styles         # Tailwind global
+middleware.js   # Auth & Role-based protection
+
+
+
+
 
