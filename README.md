@@ -1,6 +1,6 @@
-## 🐾 Pet Guardian: Web Platform for Pet Care Services
+🐾 Pet Guardian: Web Platform for Pet Care Services
 ===
-Pet Guardian adalah platform berbasis web yang dirancang untuk membantu pemilik hewan peliharaan dalam memesan layanan perawatan seperti grooming, vaksinasi, dan penitipan. Sistem ini juga memfasilitasi admin dalam mengelola jenis layanan dan staf, serta memungkinkan staf untuk menerima dan menyelesaikan tugas layanan.
+## Pet Guardian adalah platform berbasis web yang dirancang untuk membantu pemilik hewan peliharaan dalam memesan layanan perawatan seperti grooming, vaksinasi, dan penitipan. Sistem ini juga memfasilitasi admin dalam mengelola jenis layanan dan staf, serta memungkinkan staf untuk menerima dan menyelesaikan tugas layanan.
 
 🎯 Goals
 Pet Guardian bertujuan untuk:
