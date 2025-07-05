@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import supabase from '@/lib/supabaseBrowserClient';
 
 // GET: Ambil semua booking
 export async function GET(req) {
@@ -9,7 +9,7 @@ export async function GET(req) {
   const query = supabase
     .from('bookings')
     .select('*, users(email), services(name)')
-    .order('schedule', { ascending: true });
+    .order('date', { ascending: true }); // Ganti 'schedule' ke 'date' jika kolom di DB memang 'date'
 
   if (user_id) query.eq('user_id', user_id);
 
@@ -34,10 +34,10 @@ export async function POST(req) {
     {
       user_id,
       service_id,
-      animal_name: pet_name,
-      schedule: booking_date,
+      pet_name, // ✅ sudah sesuai kolom di DB
+      date: booking_date, // ✅ pastikan ini nama kolom di DB, bukan 'schedule'
       time,
-      note: notes,
+      notes, // ✅ disesuaikan dengan nama kolom 'notes' di DB
       status: 'pending',
     },
   ]);

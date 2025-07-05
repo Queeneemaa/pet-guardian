@@ -1,7 +1,7 @@
-// src/lib/supabaseRouteClient.js
+// ✅ PENTING: pastikan ini kamu gunakan
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
 export function createSupabaseRouteClient() {
-  return createRouteHandlerClient({ cookies })
+  return createRouteHandlerClient({ cookies: () => cookies() })
 }

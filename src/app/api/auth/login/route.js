@@ -1,4 +1,5 @@
-// app/api/auth/login/route.js
+
+
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
@@ -32,13 +33,13 @@ export async function POST(req) {
     .eq('id', user.id)
     .single();
 
-  console.log('User ID:', user.id);         
-  console.log('Profile:', profile);         
-  console.log('Profile Error:', userError); 
-
   if (userError || !profile) {
     return NextResponse.json({ message: 'Gagal mengambil data pengguna.' }, { status: 401 });
   }
 
-  return NextResponse.json({ role: profile.role });
+  return NextResponse.json({
+    access_token: authData.session.access_token,
+    refresh_token: authData.session.refresh_token,
+    role: profile.role,
+  });
 }

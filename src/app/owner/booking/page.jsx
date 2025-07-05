@@ -68,9 +68,8 @@ export default function BookingPage() {
     const user_id = session.user.id;
 
     // Ambil service_id dari nama layanan
-    const serviceRes = await fetch(`/api/services?name=${form.service}`);
-    const services = await serviceRes.json();
-    const selected = services?.[0];
+    const serviceRes = await fetch(`/api/services/${form.service}`);
+    const selected = await serviceRes.json();
     if (!selected) return alert('Layanan tidak ditemukan');
     const service_id = selected.id;
 

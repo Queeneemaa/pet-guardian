@@ -9,11 +9,11 @@ export default function ServicesPage() {
 
   const fetchServices = async () => {
     try {
-      const res = await fetch('/api/service');
+      const res = await fetch('/api/services');
       const data = await res.json();
 
       if (res.ok) {
-        setServices(data.services || []); // pastikan format response sesuai
+        setServices(data.services || []);
       } else {
         console.error('Gagal fetch services:', data.error);
       }
@@ -26,22 +26,23 @@ export default function ServicesPage() {
     fetchServices();
   }, []);
 
-  const handleDelete = async (id) => {
-    const confirm = window.confirm('Yakin ingin menghapus layanan ini?');
-    if (!confirm) return;
+ const handleDelete = async (id) => {
+  const confirm = window.confirm('Yakin ingin menghapus layanan ini?');
+  if (!confirm) return;
 
-    const res = await fetch(`/api/service/${id}`, {
-      method: 'DELETE',
-    });
+  const res = await fetch(`/api/service/${id}`, {
+    method: 'DELETE',
+  });
 
-    const data = await res.json();
-    if (res.ok) {
-      alert('Layanan berhasil dihapus');
-      fetchServices(); // refresh daftar layanan
-    } else {
-      alert('Gagal menghapus: ' + data.error);
-    }
-  };
+  const data = await res.json();
+  if (res.ok) {
+    alert('Layanan berhasil dihapus');
+    fetchServices(); // refresh daftar layanan
+  } else {
+    alert('Gagal menghapus: ' + data.error);
+  }
+};
+
 
   return (
     <div className="p-6">
@@ -62,9 +63,9 @@ export default function ServicesPage() {
               key={service.id}
               className="bg-white p-4 rounded shadow border border-orange-200"
             >
-              <p><strong>Nama Layanan:</strong> {service.nama}</p>
-              <p><strong>Deskripsi:</strong> {service.deskripsi}</p>
-              <p><strong>Durasi:</strong> {service.durasi}</p>
+              <p><strong>Nama Layanan:</strong> {service.name}</p>
+              <p><strong>Deskripsi:</strong> {service.description}</p>
+              <p><strong>Durasi:</strong> {service.duration}</p>
               {service.role && <p><strong>Role:</strong> {service.role}</p>}
 
               <div className="mt-2 flex gap-3">

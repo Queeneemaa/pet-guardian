@@ -43,6 +43,8 @@ export default function AddServicePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem('token');
+
     if (!form.nama || !form.deskripsi || !imageFile) {
       alert('Nama, deskripsi, dan gambar wajib diisi');
       return;
@@ -58,11 +60,17 @@ export default function AddServicePage() {
     formData.append('image', imageFile);
 
     const res = await fetch('/api/services', {
-      method: 'POST',
-      body: formData,
-    });
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${token}`,
+    apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  },
+  body: formData,
+});
+
 
     const result = await res.json();
+    
     setLoading(false);
 
     if (!res.ok) {
@@ -71,7 +79,7 @@ export default function AddServicePage() {
     }
 
     alert('Layanan berhasil ditambahkan!');
-    router.push('/dashboard/admin/services');
+    router.push('/admin/services');
   };
 
   return (

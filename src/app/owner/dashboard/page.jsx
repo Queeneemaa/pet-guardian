@@ -55,7 +55,7 @@ export default function UserDashboard() {
           <span className="text-xl font-bold">PetGuardian</span>
         </div>
         <nav className="flex gap-8 text-sm font-medium">
-          <Link href="/owner/booking">Pemesanan</Link>
+          <Link href="/owner/dashboard">Pemesanan</Link>
           <Link href="/owner/my-booking">Pemesanan Saya</Link>
           <Link href="/login">Logout</Link>
         </nav>
@@ -73,16 +73,16 @@ export default function UserDashboard() {
         <h3 className="text-xl font-bold text-[#5A3B1E] mb-6">Layanan</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {services.map((service) => (
-            <Link key={service.id} href={`/user/services/${service.type}`}>
+            <Link key={service.id} href={`/owner/services/${service.id}`}>
               <div className="bg-[#fefcfb] p-6 rounded-xl flex flex-col items-center shadow hover:scale-105 transition cursor-pointer">
                 <Image
                   src={service.image_url}
-                  alt={service.nama}
+                  alt={service.name}
                   width={100}
                   height={100}
                   className="rounded"
                 />
-                <p className="mt-4 font-semibold text-gray-700">{service.nama}</p>
+                <p className="mt-4 font-semibold text-gray-700">{service.name}</p>
               </div>
             </Link>
           ))}
